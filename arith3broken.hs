@@ -1,7 +1,5 @@
 module Arith3Broken where
 
-import Prelude
-
 main :: IO ()
 main = do
   print $ 1 + 2
