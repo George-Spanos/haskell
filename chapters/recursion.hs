@@ -55,4 +55,4 @@ digits n = go n []
         r = n `mod` 10
 
 wordNumber :: Int -> String
-wordNumber = concat . intersperse "-" . map digitToWord . digits
+wordNumber = intercalate "-" . map digitToWord . digits
