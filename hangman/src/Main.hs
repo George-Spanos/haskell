@@ -1,7 +1,6 @@
 module Main (main) where
 
-import Hangman
+import Hangman (runGame)
 
 main :: IO ()
-main = do
-  sayHi
+main = runGame
