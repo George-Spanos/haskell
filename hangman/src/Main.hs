@@ -1,5 +1,7 @@
 module Main (main) where
 
+import Hangman
+
 main :: IO ()
 main = do
-  putStrLn "hello world"
+  sayHi
