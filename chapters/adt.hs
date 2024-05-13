@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -Wno-missing-fields #-}
 
-data Price = Price Integer deriving (Eq, Show)
+newtype Price = Price Integer deriving (Eq, Show)
 
 type Seets = Integer
 

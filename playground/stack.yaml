@@ -1,0 +1,4 @@
+require-stack-version: ">=2.15"
+resolver: lts-22.7
+packages:
+  - .
