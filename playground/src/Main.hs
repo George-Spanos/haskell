@@ -1,6 +1,6 @@
-import Addition (add, sayHello)
-
+-- import qualified Addition as A (main)
+-- import qualified Optional as O (main)
+import qualified PlayWithArbitiary as PWA (main)
 main :: IO ()
 main = do
-  sayHello
-  print (add 1 2)
+  PWA.main

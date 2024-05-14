@@ -1,2 +1,5 @@
+import qualified ArbitiarySpec as A (main)
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = do
+  A.main
