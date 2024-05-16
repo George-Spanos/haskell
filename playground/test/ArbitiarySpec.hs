@@ -10,10 +10,6 @@ import PlayWithArbitiary (Optional, optionalAssoc)
 import Test.Hspec (describe, hspec, it)
 import Test.QuickCheck (Testable (property))
 
--- main :: IO ()
--- main = do
---   sample optGenString
-
 type OptString = Optional String -> Optional String -> Optional String -> Bool
 
 main :: IO ()

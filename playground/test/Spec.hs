@@ -1,5 +1,6 @@
-import qualified ArbitiarySpec as A (main)
+import qualified LearnFunctorsSpec as LF (main)
+import Test.Hspec (hspec)
 
 main :: IO ()
-main = do
-  A.main
+main = hspec $ do
+  LF.main
