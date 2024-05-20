@@ -1,6 +1,15 @@
--- import qualified Addition as A (main)
--- import qualified Optional as O (main)
-import qualified PlayWithArbitiary as PWA (main)
-main :: IO ()
-main = do
-  PWA.main
+{-# LANGUAGE OverloadedStrings #-}
+
+import Web.Scotty
+
+main:: IO ()
+main = scotty 3000 $ do
+  get "/:word" $ do
+    beam <- captureParam "word"
+    html
+      ( mconcat
+          [ "<h1>Scotty, "
+          , beam
+          , " me up!</h1>"
+          ]
+      )

@@ -1,15 +1,20 @@
+.PHONY: test
 all: build run
 
-build: 
+clean:
+	stack clean
+
+build: clean
 	stack build
 
-run: 
+run: build
 	stack exec playground
 
 dev: 
 	stack build --file-watch
 
-test:
+
+test: clean
 	stack test
 
 test-watch:

@@ -30,6 +30,14 @@ instance (Arbitrary a) => Arbitrary (Optional a) where
 optionalAssoc :: (Eq a, Semigroup a) => a -> a -> a -> Bool
 optionalAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
 
+data More a b =
+  L a b a
+  | R b a b deriving (Eq, Show)
+  
+instance Functor (More x) where
+fmap f (L a b a') = L (f a) b (f a')
+fmap f (R b a b') = R b (f a) b'
+
 main :: IO ()
 main = do
   let a = Only (Sum 1)

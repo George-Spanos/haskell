@@ -23,6 +23,9 @@ library
         PlayWithArbitiary
         AnotherMaybe
         LearnFunctors
+        LearnApplicative
+        BadMonoid
+        LearnMonad
 
     hs-source-dirs:   lib
     default-language: Haskell2010
@@ -34,7 +37,8 @@ library
     build-depends:
         base >=4.7 && <5,
         hspec,
-        QuickCheck
+        QuickCheck,
+        checkers
 
 executable playground
     main-is:          Main.hs
@@ -48,7 +52,8 @@ executable playground
 
     build-depends:
         base >=4.7 && <5,
-        playground
+        playground,
+        scotty
 
 test-suite playground-test
     type:             exitcode-stdio-1.0
@@ -65,4 +70,6 @@ test-suite playground-test
         base >=4.7 && <5,
         playground,
         hspec,
-        QuickCheck
+        QuickCheck,
+        checkers
+
