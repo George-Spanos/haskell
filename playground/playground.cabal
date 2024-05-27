@@ -24,8 +24,12 @@ library
         AnotherMaybe
         LearnFunctors
         LearnApplicative
+        LearnReader
+        LearnState
         BadMonoid
         LearnMonad
+        RandomExample
+        RandomExample2
 
     hs-source-dirs:   lib
     default-language: Haskell2010
@@ -36,6 +40,9 @@ library
 
     build-depends:
         base >=4.7 && <5,
+        transformers,
+        mtl,
+        random >=1.1,
         hspec,
         QuickCheck,
         checkers
@@ -52,6 +59,7 @@ executable playground
 
     build-depends:
         base >=4.7 && <5,
+        random >=1.1,
         playground,
         scotty
 
@@ -72,4 +80,3 @@ test-suite playground-test
         hspec,
         QuickCheck,
         checkers
-

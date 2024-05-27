@@ -39,7 +39,7 @@ executable urlShortener
         mtl,
         network-uri,
         random,
-        scotty,
+        scotty >= 0.22, 
         semigroups,
         text,
         transformers

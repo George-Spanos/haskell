@@ -5,14 +5,21 @@ module Main (main) where
 import Control.Monad (replicateM)
 import Control.Monad.IO.Class (liftIO)
 import qualified Data.ByteString.Char8 as BC
+import Data.Function ((&))
 import Data.Text.Encoding (decodeUtf8, encodeUtf8)
 import qualified Data.Text.Lazy as TL
 import qualified Database.Redis as R
 import Network.URI (URI, parseURI)
 import qualified System.Random as SR
 import Web.Scotty
-    ( captureParam, get, html, queryParam, scotty, text, ScottyM )
-import Data.Function ((&))
+  ( ScottyM,
+    get,
+    html,
+    pathParam,
+    queryParam,
+    scotty,
+    text,
+  )
 
 alphaNum :: String
 alphaNum = ['A' .. 'Z'] ++ ['0' .. '9']
@@ -71,7 +78,7 @@ app rConn = do
         html (shortyCreated resp shawty)
       Nothing -> text (shortyAintUri uri)
   get "/:short" $ do
-    short <- captureParam "short"
+    short <- pathParam "short"
     uri <- liftIO (getURI rConn short)
     case uri of
       Left r -> text (TL.pack (show r))
