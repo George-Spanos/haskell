@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 module RandomExample2 (main) where
 
 import Control.Applicative (liftA3)

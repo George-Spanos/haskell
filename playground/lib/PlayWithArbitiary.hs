@@ -1,3 +1,8 @@
+{-# OPTIONS_GHC -Wno-missing-methods #-}
+{-# OPTIONS_GHC -Wno-missing-signatures #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
+{-# OPTIONS_GHC -Wno-type-defaults #-}
+
 module PlayWithArbitiary (main, Optional (Only, Nada), optionalAssoc, optGenString) where
 
 import Data.Monoid
@@ -30,11 +35,13 @@ instance (Arbitrary a) => Arbitrary (Optional a) where
 optionalAssoc :: (Eq a, Semigroup a) => a -> a -> a -> Bool
 optionalAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
 
-data More a b =
-  L a b a
-  | R b a b deriving (Eq, Show)
-  
-instance Functor (More x) where
+data More a b
+  = L a b a
+  | R b a b
+  deriving (Eq, Show)
+
+instance Functor (More x)
+
 fmap f (L a b a') = L (f a) b (f a')
 fmap f (R b a b') = R b (f a) b'
 

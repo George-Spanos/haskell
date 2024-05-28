@@ -1,7 +1,6 @@
 module LearnReader (main) where
 
 import Data.Char
-import Data.Maybe (catMaybes)
 import Data.Monoid
 
 newtype Reader r a = Reader {runReader :: r -> a}

@@ -1,12 +1,12 @@
 module Main where
 
-import qualified Addition as RE2
+-- import qualified Addition as RE2
 -- import qualified LearnReader as LR
 -- import qualified RandomExample2 as RE (main)
-import qualified LearnState as LS (main)
-
+-- import qualified LearnState as LS (main)
+import qualified LearnParser as LR (main)
 main :: IO ()
-main = LS.main
+main = LR.main
 
 -- Scotty example
 

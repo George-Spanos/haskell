@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 module AnotherMaybe where
 
 import PlayWithArbitiary (Optional (Nada, Only))
