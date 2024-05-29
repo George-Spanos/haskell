@@ -7,6 +7,7 @@ where
 import Control.Applicative ((<|>))
 import Control.Exception
 import qualified Control.Exception
+import Data.Functor (($>))
 import System.IO (readFile)
 import Text.Trifecta
 
@@ -16,19 +17,62 @@ class Parsable a where
 data JsonValue
   = JsonString String
   | JsonNumber Int
-  | JsonObject [(String, JsonValue)]
-  | JsonArray [JsonValue]
   | JsonBool Bool
   | JsonNull
+  | JsonObject [(String, JsonValue)]
+  | JsonArray [JsonValue]
   deriving (Show)
 
-jsonString :: Parser String
-jsonString = char '"' *> manyTill anyChar (char '"')
+jsonString :: Parser JsonValue
+jsonString = fmap JsonString $ char '"' *> manyTill anyChar (char '"')
 
-jsonInt :: Parser Int
+jsonInt :: Parser JsonValue
 jsonInt = do
   n <- some digit
-  return (read n)
+  (return . JsonNumber . read) n
+
+jsonBool :: Parser JsonValue
+jsonBool =
+  choice
+    [ JsonBool True <$ string "true",
+      JsonBool False <$ string "false"
+    ]
+
+jsonNull :: Parser JsonValue
+jsonNull = string "null" $> JsonNull
+
+jsonArray :: Parser JsonValue
+jsonArray = do
+  _ <- char '['
+  values <- jsonValue `sepBy` char ','
+  _ <- char ']'
+  return $ JsonArray values
+
+jsonObject :: Parser JsonValue
+jsonObject = do
+  _ <- char '{'
+  pairs <- keyValuePair `sepBy` char ','
+  _ <- char '}'
+  return $ JsonObject pairs
+  where
+    keyValuePair = do
+      key <- jsonString
+      _ <- char ':'
+      value <- jsonValue
+      case key of
+        JsonString k -> return (k, value)
+        _ -> fail "Expected a JSON string as key"
+
+jsonValue :: Parser JsonValue
+jsonValue =
+  choice
+    [ jsonString,
+      jsonInt,
+      jsonBool,
+      jsonNull,
+      jsonArray,
+      jsonObject
+    ]
 
 skipWhitespace :: Parser ()
 skipWhitespace = skipMany (oneOf " \n\t\r")
@@ -39,23 +83,23 @@ skipInitOrEndOrComa = skipOptional (char ',' <|> char '{' <|> char '}')
 skipColon :: Parser ()
 skipColon = skipOptional (char ':')
 
-parseValue :: String -> JsonValue
-parseValue = undefined
-
-jsonKeyValue :: String -> Parser (String, JsonValue)
-jsonKeyValue key = do
-  _ <- skipInitOrEndOrComa
-  _ <- skipWhitespace
-  _ <- string $ concat ["\"", key, "\""]
-  _ <- skipColon
-  _ <- skipWhitespace
-  value <- jsonString
-  return (key, value)
-
+-- jsonKeyValue :: String -> Parser (String, JsonValue)
+-- jsonKeyValue key = do
+--   _ <- skipInitOrEndOrComa
+--   _ <- skipWhitespace
+--   _ <- string $ concat ["\"", key, "\""]
+--   _ <- skipColon
+--   _ <- skipWhitespace
+--   value <- jsonString
+--   return (key, value)
 
 parseContents :: (Parsable a) => String -> Maybe a
 parseContents = undefined
 
+-- parseContents = do
+--   _ <- skipInitOrEndOrComa
+--   _ <- skipWhitespace
+--   (JsonString s) <- jsonString
 
 safeReadFile :: FilePath -> IO (Maybe String)
 safeReadFile x = do
