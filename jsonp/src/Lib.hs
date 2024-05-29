@@ -1,18 +1,13 @@
 module Lib
   ( parseJsonFile,
-    Parsable,
+    JsonValue (..),
   )
 where
 
 import Control.Applicative ((<|>))
 import Control.Exception
-import qualified Control.Exception
 import Data.Functor (($>))
-import System.IO (readFile)
 import Text.Trifecta
-
-class Parsable a where
-  parse :: String -> Maybe a
 
 data JsonValue
   = JsonString String
@@ -21,7 +16,7 @@ data JsonValue
   | JsonNull
   | JsonObject [(String, JsonValue)]
   | JsonArray [JsonValue]
-  deriving (Show)
+  deriving (Show, Eq)
 
 jsonString :: Parser JsonValue
 jsonString = fmap JsonString $ char '"' *> manyTill anyChar (char '"')
@@ -44,35 +39,31 @@ jsonNull = string "null" $> JsonNull
 jsonArray :: Parser JsonValue
 jsonArray = do
   _ <- char '['
-  values <- jsonValue `sepBy` char ','
+  _ <- skipWhitespace
+  -- values <- jsonValue `sepBy` char ','
+  
+  _ <- skipWhitespace
   _ <- char ']'
-  return $ JsonArray values
+
+  return $ JsonArray []
 
 jsonObject :: Parser JsonValue
 jsonObject = do
   _ <- char '{'
-  pairs <- keyValuePair `sepBy` char ','
+  _ <- skipWhitespace
+  value <- jsonKeyValue `sepBy` char ','
+  _ <- skipWhitespace
   _ <- char '}'
-  return $ JsonObject pairs
-  where
-    keyValuePair = do
-      key <- jsonString
-      _ <- char ':'
-      value <- jsonValue
-      case key of
-        JsonString k -> return (k, value)
-        _ -> fail "Expected a JSON string as key"
+  return $ JsonObject value
 
 jsonValue :: Parser JsonValue
 jsonValue =
-  choice
-    [ jsonString,
-      jsonInt,
-      jsonBool,
-      jsonNull,
-      jsonArray,
-      jsonObject
-    ]
+  jsonString
+    <|> jsonInt
+    <|> jsonBool
+    <|> jsonNull
+    <|> jsonArray
+    <|> jsonObject
 
 skipWhitespace :: Parser ()
 skipWhitespace = skipMany (oneOf " \n\t\r")
@@ -83,23 +74,21 @@ skipInitOrEndOrComa = skipOptional (char ',' <|> char '{' <|> char '}')
 skipColon :: Parser ()
 skipColon = skipOptional (char ':')
 
--- jsonKeyValue :: String -> Parser (String, JsonValue)
--- jsonKeyValue key = do
---   _ <- skipInitOrEndOrComa
---   _ <- skipWhitespace
---   _ <- string $ concat ["\"", key, "\""]
---   _ <- skipColon
---   _ <- skipWhitespace
---   value <- jsonString
---   return (key, value)
+jsonKeyValue :: Parser (String, JsonValue)
+jsonKeyValue = do
+  _ <- skipInitOrEndOrComa
+  _ <- skipWhitespace
+  (JsonString s) <- jsonString
+  _ <- skipColon
+  _ <- skipWhitespace
+  value <- jsonValue
+  return (s, value)
 
-parseContents :: (Parsable a) => String -> Maybe a
-parseContents = undefined
-
--- parseContents = do
---   _ <- skipInitOrEndOrComa
---   _ <- skipWhitespace
---   (JsonString s) <- jsonString
+parseContents :: String -> Maybe JsonValue
+parseContents input =
+  case parseString (skipWhitespace *> jsonValue <* eof) mempty input of
+    Success result -> Just result
+    Failure _ -> Nothing
 
 safeReadFile :: FilePath -> IO (Maybe String)
 safeReadFile x = do
@@ -110,7 +99,7 @@ safeReadFile x = do
       return Nothing
     Right a -> return $ Just a
 
-parseJsonFile :: (Parsable a) => FilePath -> IO (Maybe a)
+parseJsonFile :: FilePath -> IO (Maybe JsonValue)
 parseJsonFile x = do
   content <- safeReadFile x
   return $ content >>= parseContents

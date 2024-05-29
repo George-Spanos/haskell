@@ -23,7 +23,6 @@ source-repository head
 library
     exposed-modules:
         Lib
-        DomainTypes
 
     hs-source-dirs:   src
     other-modules:    Paths_jsonp
