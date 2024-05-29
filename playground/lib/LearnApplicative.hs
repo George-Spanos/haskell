@@ -51,8 +51,8 @@ append :: List a -> List a -> List a
 append Nil ys = ys
 append (Cons x xs) ys = Cons x $ xs `append` ys
 
-take' :: Int -> List a -> List a
-take' _ Nil = Nil
-take' n (Cons a as)
-  | n <= 0 = Nil
-  | otherwise = Cons a (take' (n - 1) as)
+-- take' :: Int -> List a -> List a
+-- take' _ Nil = Nil
+-- take' n (Cons a as)
+--   | n <= 0 = Nil
+--   | otherwise = Cons a (take' (n - 1) as)

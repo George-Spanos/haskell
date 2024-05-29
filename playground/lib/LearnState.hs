@@ -33,6 +33,7 @@
 -- main = do
 --   print $ runState example 0
 --   print $ runState expoExample 0
+{-# OPTIONS_GHC -Wno-unused-do-bind #-}
 module LearnState (main) where
 
 import Control.Monad.State

@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wno-missing-export-lists #-}
-
 module LearnParser where
 
 import Text.Trifecta
@@ -27,13 +25,13 @@ pNL s = putStrLn ('\n' : s)
 
 main :: IO ()
 main = do
-  pNL "stop:"
-  testParse stop
-  pNL "one:"
-  testParse one
-  pNL "one':"
-  testParse one'
-  pNL "oneTwo:"
-  testParse oneTwo
+  -- pNL "stop:"
+  -- testParse stop
+  -- pNL "one:"
+  -- testParse one
+  -- pNL "one':"
+  -- testParse one'
+  -- pNL "oneTwo:"
+  -- testParse oneTwo
   pNL "oneTwo':"
   testParse oneTwo'

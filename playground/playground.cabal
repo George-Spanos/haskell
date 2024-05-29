@@ -47,7 +47,9 @@ library
         hspec,
         QuickCheck,
         checkers,
-        trifecta
+        trifecta,
+        parsers,
+        directory
 
 executable playground
     main-is:          Main.hs

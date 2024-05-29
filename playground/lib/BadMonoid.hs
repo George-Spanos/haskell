@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-missing-export-lists #-}
 module BadMonoid where
 
 import Test.QuickCheck (Arbitrary, arbitrary, frequency)
