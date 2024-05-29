@@ -1,0 +1,50 @@
+{
+  "families": [
+    {
+      "familyName": "Smith",
+      "members": [
+        {
+          "name": "John",
+          "surname": "Smith",
+          "age": 40,
+          "eyeColor": "blue"
+        },
+        {
+          "name": "Jane",
+          "surname": "Smith",
+          "age": 38,
+          "eyeColor": "green"
+        },
+        {
+          "name": "Jake",
+          "surname": "Smith",
+          "age": 10,
+          "eyeColor": "blue"
+        }
+      ]
+    },
+    {
+      "familyName": "Doe",
+      "members": [
+        {
+          "name": "John",
+          "surname": "Doe",
+          "age": 45,
+          "eyeColor": "brown"
+        },
+        {
+          "name": "Jane",
+          "surname": "Doe",
+          "age": 42,
+          "eyeColor": "hazel"
+        },
+        {
+          "name": "Judy",
+          "surname": "Doe",
+          "age": 12,
+          "eyeColor": "brown"
+        }
+      ]
+    }
+  ]
+}
