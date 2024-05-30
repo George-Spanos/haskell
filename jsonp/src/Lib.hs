@@ -1,5 +1,6 @@
 module Lib
   ( parseJsonFile,
+    parseContents,
     JsonValue (..),
   )
 where
@@ -38,22 +39,17 @@ jsonNull = string "null" $> JsonNull
 
 jsonArray :: Parser JsonValue
 jsonArray = do
-  _ <- char '['
-  _ <- skipWhitespace
-  -- values <- jsonValue `sepBy` char ','
-  
-  _ <- skipWhitespace
-  _ <- char ']'
+  _ <- skipSuroundingWhiteSpace (char '[')
+  values <- skipSuroundingWhiteSpace jsonValue `sepBy` skipSuroundingWhiteSpace (char ',')
+  _ <- skipSuroundingWhiteSpace (char ']')
 
-  return $ JsonArray []
+  return $ JsonArray values
 
 jsonObject :: Parser JsonValue
 jsonObject = do
-  _ <- char '{'
-  _ <- skipWhitespace
-  value <- jsonKeyValue `sepBy` char ','
-  _ <- skipWhitespace
-  _ <- char '}'
+  _ <- skipSuroundingWhiteSpace (char '{')
+  value <- jsonKeyValue `sepBy` skipSuroundingWhiteSpace (char ',')
+  _ <- skipSuroundingWhiteSpace (char '}')
   return $ JsonObject value
 
 jsonValue :: Parser JsonValue
@@ -68,6 +64,9 @@ jsonValue =
 skipWhitespace :: Parser ()
 skipWhitespace = skipMany (oneOf " \n\t\r")
 
+skipSuroundingWhiteSpace :: Parser a -> Parser a
+skipSuroundingWhiteSpace a = skipWhitespace *> a <* skipWhitespace
+
 skipInitOrEndOrComa :: Parser ()
 skipInitOrEndOrComa = skipOptional (char ',' <|> char '{' <|> char '}')
 
@@ -77,11 +76,9 @@ skipColon = skipOptional (char ':')
 jsonKeyValue :: Parser (String, JsonValue)
 jsonKeyValue = do
   _ <- skipInitOrEndOrComa
-  _ <- skipWhitespace
-  (JsonString s) <- jsonString
+  (JsonString s) <- skipSuroundingWhiteSpace jsonString
   _ <- skipColon
-  _ <- skipWhitespace
-  value <- jsonValue
+  value <- skipSuroundingWhiteSpace jsonValue
   return (s, value)
 
 parseContents :: String -> Maybe JsonValue

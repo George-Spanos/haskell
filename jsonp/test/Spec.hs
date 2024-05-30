@@ -1,4 +1,5 @@
 import Lib (JsonValue (..), parseJsonFile)
+import Fixture
 import Test.Hspec (describe, hspec, it, shouldBe)
 
 main :: IO ()
@@ -16,11 +17,11 @@ main = hspec $ do
       case res of
         Nothing -> error "Failed to parse JSON"
         Just value -> value `shouldBe` expectedValue
-    -- it "should parse families" $ do
-    --   res <- parseJsonFile "input/families.json"
-    --   case res of
-    --     Nothing -> error "Failed to parse JSON"
-    --     Just value -> value `shouldBe` expectedFamilies
+    it "should parse families" $ do
+      res <- parseJsonFile "input/families.json"
+      case res of
+        Nothing -> error "Failed to parse JSON"
+        Just value -> value `shouldBe` expectedFamilies
     it "should parse simple array" $ do
       let expectedValue = JsonArray [JsonNumber 1, JsonNumber 2, JsonNumber 3, JsonNull]
       res <- parseJsonFile "input/simple-array.json"
