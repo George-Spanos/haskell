@@ -31,6 +31,8 @@ library
         RandomExample
         RandomExample2
         LearnParser
+        LearnTransformers
+        Twinplicative
 
     hs-source-dirs:   lib
     default-language: Haskell2010
