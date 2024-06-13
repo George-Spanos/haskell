@@ -8,14 +8,7 @@ build: clean
 	stack build
 
 run: build
-	stack exec fingerd-exe
+	stack exec fingerd
 
-dev: 
-	stack build --file-watch
-
-
-test: clean
-	stack test
-
-test-watch:
-	stack test --file-watch
+debug: build
+	stack exec fingerd-debug
