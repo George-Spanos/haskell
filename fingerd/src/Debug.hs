@@ -18,7 +18,7 @@ main :: IO ()
 main = withSocketsDo $ do
   addrinfos <- getAddrInfo
             (Just (defaultHints {addrFlags = [AI_PASSIVE]}))
-            Nothing (Just "7979")
+            Nothing (Just "79")
   let serveraddr = head addrinfos
   sock <- socket (addrFamily serveraddr)
                   Stream defaultProtocol

@@ -22,7 +22,13 @@ executable fingerd
         -Wincomplete-uni-patterns -Wmissing-export-lists
         -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
 
-    build-depends:    base >=4.7 && <5
+    build-depends:
+        base >=4.7 && <5,
+        sqlite-simple,
+        text,
+        network,
+        bytestring,
+        raw-strings-qq
 
 executable fingerd-debug
     main-is:          Debug.hs
