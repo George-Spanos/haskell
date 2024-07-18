@@ -8,7 +8,10 @@ build: clean
 	stack build
 
 run: build
-	stack exec playground
+	stack run
+
+run-crypto: build
+	stack run playground-crypto -- $$(find ./src -type f)
 
 dev: 
 	stack build --file-watch

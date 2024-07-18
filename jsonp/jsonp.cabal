@@ -1,73 +1,74 @@
-cabal-version:      2.2
-name:               jsonp
-version:            0.1.0.0
-license:            BSD-3-Clause
-license-file:       LICENSE
-copyright:          2024 Author name here
-maintainer:         example@example.com
-author:             Author name here
-homepage:           https://github.com/githubuser/jsonp#readme
-bug-reports:        https://github.com/githubuser/jsonp/issues
-description:
-    Please see the README on GitHub at <https://github.com/githubuser/jsonp#readme>
+cabal-version: 2.2
 
-build-type:         Simple
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           jsonp
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/jsonp#readme>
+homepage:       https://github.com/githubuser/jsonp#readme
+bug-reports:    https://github.com/githubuser/jsonp/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2024 Author name here
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
 extra-source-files:
     README.md
     CHANGELOG.md
 
 source-repository head
-    type:     git
-    location: https://github.com/githubuser/jsonp
+  type: git
+  location: https://github.com/githubuser/jsonp
 
 library
-    exposed-modules:
-        Lib
-
-    hs-source-dirs:   src
-    other-modules:    Paths_jsonp
-    autogen-modules:  Paths_jsonp
-    default-language: Haskell2010
-    ghc-options:
-        -Wall -Wcompat -Widentities -Wincomplete-record-updates
-        -Wincomplete-uni-patterns -Wmissing-export-lists
-        -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
-
-    build-depends:
-        base >=4.7 && <5,
-        trifecta,
-        parsers
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_jsonp
+  autogen-modules:
+      Paths_jsonp
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , parsers
+    , trifecta
+  default-language: Haskell2010
 
 executable jsonp-exe
-    main-is:          Main.hs
-    hs-source-dirs:   app
-    other-modules:    Paths_jsonp
-    autogen-modules:  Paths_jsonp
-    default-language: Haskell2010
-    ghc-options:
-        -Wall -Wcompat -Widentities -Wincomplete-record-updates
-        -Wincomplete-uni-patterns -Wmissing-export-lists
-        -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
-        -threaded -rtsopts -with-rtsopts=-N
-
-    build-depends:
-        base >=4.7 && <5,
-        jsonp
+  main-is: Main.hs
+  other-modules:
+      Paths_jsonp
+  autogen-modules:
+      Paths_jsonp
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , jsonp
+    , parsers
+    , trifecta
+  default-language: Haskell2010
 
 test-suite jsonp-test
-    type:             exitcode-stdio-1.0
-    main-is:          Spec.hs
-    hs-source-dirs:   test
-    other-modules:    Paths_jsonp
-    autogen-modules:  Paths_jsonp
-    default-language: Haskell2010
-    ghc-options:
-        -Wall -Wcompat -Widentities -Wincomplete-record-updates
-        -Wincomplete-uni-patterns -Wmissing-export-lists
-        -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
-        -threaded -rtsopts -with-rtsopts=-N
-
-    build-depends:
-        base >=4.7 && <5,
-        jsonp,
-        hspec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Fixture
+      Paths_jsonp
+  autogen-modules:
+      Paths_jsonp
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , jsonp
+    , parsers
+    , trifecta
+  default-language: Haskell2010

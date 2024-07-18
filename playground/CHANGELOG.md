@@ -1,4 +1,4 @@
-# Changelog for `playground`
+# Changelog for `playground-v2`
 
 All notable changes to this project will be documented in this file.
 
