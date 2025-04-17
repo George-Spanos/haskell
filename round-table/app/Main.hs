@@ -1,6 +1,8 @@
 module Main (main) where
 
-import Lib
+import Minesweeper.Web (runWebApp)
 
 main :: IO ()
-main = someFunc
+main = do
+  putStrLn "Starting Minesweeper web server on port 3001..."
+  runWebApp 3001

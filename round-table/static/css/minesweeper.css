@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+    margin: 0 auto;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ddd;
+    border: 1px solid #999;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.hidden {
+    background-color: #bbb;
+}
+
+.revealed {
+    background-color: #eee;
+}
+
+.flagged {
+    background-color: #fdd;
+}
+
+.mine {
+    background-color: #f88;
+}
+
+.num-1 { color: blue; }
+.num-2 { color: green; }
+.num-3 { color: red; }
+.num-4 { color: purple; }
+.num-5 { color: maroon; }
+.num-6 { color: turquoise; }
+.num-7 { color: black; }
+.num-8 { color: gray; }

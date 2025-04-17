@@ -26,6 +26,8 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Minesweeper.Game
+      Minesweeper.Web
   other-modules:
       Paths_round_table
   autogen-modules:
@@ -34,7 +36,17 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , containers
+    , random
+    , scotty
+    , text
+    , transformers
+    , wai-middleware-static
   default-language: Haskell2010
 
 executable round-table-exe
@@ -47,8 +59,18 @@ executable round-table-exe
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , containers
+    , random
     , round-table
+    , scotty
+    , text
+    , transformers
+    , wai-middleware-static
   default-language: Haskell2010
 
 test-suite round-table-test
@@ -62,6 +84,18 @@ test-suite round-table-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      HUnit
+    , aeson
+    , base >=4.7 && <5
+    , blaze-html
+    , blaze-markup
+    , bytestring
+    , containers
+    , hspec
+    , random
     , round-table
+    , scotty
+    , text
+    , transformers
+    , wai-middleware-static
   default-language: Haskell2010
