@@ -5,8 +5,8 @@ import Data.List (intersperse)
 import Debug.Trace
 import GHC.Read (readField)
 import System.Exit (exitSuccess)
-import System.IO
-import System.Random
+import System.IO (BufferMode (NoBuffering), hSetBuffering, stdout)
+import System.Random (randomRIO)
 
 letters = ['a' .. 'z']
 
@@ -16,6 +16,7 @@ minWordChars = 5
 maxWordChars :: Int
 maxWordChars = 9
 
+errorTries :: Integer
 errorTries = 5
 
 includesSpecialCharacter :: String -> Bool
@@ -72,7 +73,7 @@ gameLoop p@(Puzzle a b) = do
     Won -> do
       print $ "Won!!! " ++ b
       return Nothing
-    Lost -> do 
+    Lost -> do
       print $ "Lost. The word was " ++ b
       return Nothing
     Playing -> do

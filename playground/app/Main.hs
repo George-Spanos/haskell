@@ -1,4 +1,4 @@
-import CryptoChannels (run)
+import LearnState (run)
 
 
 main :: IO ()

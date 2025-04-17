@@ -16,7 +16,7 @@ import Data.Typeable
 import Database.SQLite.Simple hiding (close)
 import qualified Database.SQLite.Simple as SQLite
 import Database.SQLite.Simple.Types
-import Network.Socket hiding (close, recv)
+import Network.Socket hiding (close)
 import Network.Socket.ByteString (recv, sendAll)
 import Text.RawString.QQ
 import Network.Socket (close)
