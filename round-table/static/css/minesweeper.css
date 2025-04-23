@@ -41,36 +41,54 @@ button {
 #board {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    gap: 2px;
+    gap: 4px;
     margin: 0 auto;
+    background-color: #999;
+    padding: 4px;
+    border-radius: 4px;
+    max-width: max-content;
 }
 
 .cell {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #ddd;
-    border: 1px solid #999;
+    border: 2px outset #ccc;
     font-weight: bold;
     cursor: pointer;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    line-height: 1;
+    user-select: none;
+    font-size: 18px;
+    border-radius: 3px;
 }
 
 .hidden {
     background-color: #bbb;
+    border-style: outset;
 }
 
 .revealed {
     background-color: #eee;
+    border-style: inset;
+    border-color: #ddd;
 }
 
 .flagged {
     background-color: #fdd;
+    border-style: outset;
 }
 
 .mine {
     background-color: #f88;
+    border-style: inset;
+    border-color: #f66;
 }
 
 .num-1 { color: blue; }

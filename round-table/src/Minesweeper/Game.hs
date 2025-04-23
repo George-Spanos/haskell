@@ -119,9 +119,27 @@ revealCell pos gameState@GameState{board=board', mines=mines', boardWidth=width,
 -- Reveal neighbors recursively when a cell with 0 adjacent mines is revealed
 revealNeighbors :: Position -> GameState -> GameState
 revealNeighbors pos gameState@GameState{board=board', boardWidth=width, boardHeight=height} =
-    let neighbors = getAdjacentPositions width height pos
+    let 
+        -- Find all hidden neighbors
+        neighbors = getAdjacentPositions width height pos
         hiddenNeighbors = filter (\p -> Map.lookup p board' == Just Hidden) neighbors
-    in foldl (flip revealCell) gameState hiddenNeighbors
+        
+        -- For each hidden neighbor, calculate adjacent mines and update the board
+        updatedBoard = foldl (\b p -> 
+            let mineCount = countAdjacentMines (mines gameState) p width height
+            in Map.insert p (Revealed mineCount) b
+          ) board' hiddenNeighbors
+        
+        -- Create an intermediate game state with the updated board
+        intermediateState = gameState { board = updatedBoard }
+        
+        -- For each neighbor with zero adjacent mines, recursively reveal its neighbors
+        zeroMineNeighbors = filter (\p -> 
+            countAdjacentMines (mines gameState) p width height == 0
+          ) hiddenNeighbors
+    in 
+        -- Recursively reveal neighbors of cells with zero adjacent mines
+        foldl (\gs p -> revealNeighbors p gs) intermediateState zeroMineNeighbors
 
 -- Flag or unflag a cell
 flagCell :: Position -> GameState -> GameState

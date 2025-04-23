@@ -97,6 +97,44 @@ main = hspec $ do
                 , fromJust $ getCellState (1, 0) game'
                 ]
         all isRevealed revealed `shouldBe` True
+
+      it "maintains previously revealed cells when revealing new cells" $ do
+        -- Create a test game with a known configuration
+        let game = GameState
+                { board = Map.fromList [((x, y), Hidden) | x <- [0..3], y <- [0..3]]
+                , mines = [(3, 3)]  -- Only one mine in the corner
+                , boardWidth = 4
+                , boardHeight = 4
+                , gameStatus = InProgress
+                }
+            -- First reveal operation at (0,0) - should cascade and reveal multiple cells
+            game1 = revealCell (0, 0) game
+            -- Check a few cells that should be revealed in the first operation
+            posToCheck1 = [(0, 0), (0, 1), (1, 0)]
+            
+            -- All cells in posToCheck1 should be revealed in game1
+            allRevealed1 = all (\pos -> 
+                case getCellState pos game1 of
+                  Just (Revealed _) -> True
+                  _ -> False) posToCheck1
+                
+            -- Second reveal operation at (2,2) - should reveal more cells
+            game2 = revealCell (2, 2) game1
+            
+            -- Check that the cells revealed in the first operation are still revealed
+            stillRevealed = all (\pos -> 
+                case getCellState pos game2 of
+                  Just (Revealed _) -> True
+                  _ -> False) posToCheck1
+                
+            -- And that the newly revealed cell is also revealed
+            newlyRevealed = case getCellState (2, 2) game2 of
+                  Just (Revealed _) -> True
+                  _ -> False
+                
+        allRevealed1 `shouldBe` True
+        stillRevealed `shouldBe` True
+        newlyRevealed `shouldBe` True
   
   describe "Game Logic" $ do
     describe "isGameWon" $ do
