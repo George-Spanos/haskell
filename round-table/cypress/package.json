@@ -1,0 +1,13 @@
+{
+  "name": "minesweeper-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for Haskell Minesweeper",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test": "bash scripts/tests.sh"
+  },
+  "devDependencies": {
+    "cypress": "^13.10.0"
+  }
+}
