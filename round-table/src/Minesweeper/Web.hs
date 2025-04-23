@@ -131,22 +131,24 @@ gameToJson game = Aeson.object
 
 -- Convert JSON to game state
 jsonToGame :: Aeson.Value -> Maybe GameState
-jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do -- Use withObject
+jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do
     width <- obj .: "width"
     height <- obj .: "height"
+    mineCount <- obj .: "mineCount"
     statusStr <- obj .: "status"
     cellsObj <- obj .: "cells"
 
-    let status = jsonToGameStatus statusStr
-    -- Parse the cells object within the Parser monad
-    (boardMap, mineList) <- jsonToBoardAndMines cellsObj
-
-    return $ GameState
-        { board = boardMap
-        , mines = mineList
-        , boardWidth = width
-        , boardHeight = height
-        , gameStatus = status
+    -- Create a new game state with a fixed seed (42)
+    -- This ensures mines are consistent when state is sent back to server
+    let game = newGame width height mineCount 42
+        gameStatus' = jsonToGameStatus statusStr
+    
+    -- Now update the board with the cell states from JSON
+    board' <- jsonToBoardMap cellsObj
+    
+    return $ game
+        { board = board'
+        , gameStatus = gameStatus'
         }
   where
     jsonToGameStatus :: String -> GameStatus
@@ -155,40 +157,38 @@ jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do -
     jsonToGameStatus "lost" = Lost
     jsonToGameStatus _ = InProgress
 
-    -- Updated function to parse the board and mines from the cells object
-    jsonToBoardAndMines :: Aeson.Value -> AesonTypes.Parser (Map.Map Position CellState, [Position])
-    jsonToBoardAndMines = Aeson.withObject "cells" $ \cellsObj -> do
+    -- Function to parse just the board map from the cells object
+    jsonToBoardMap :: Aeson.Value -> AesonTypes.Parser (Map.Map Position CellState)
+    jsonToBoardMap = Aeson.withObject "cells" $ \cellsObj -> do
         let parsePos :: String -> Maybe Position
             parsePos s = case break (==',') s of
                 (xStr, ',':yStr) -> Just (read xStr, read yStr)
                 _ -> Nothing
 
-            parseCell :: Aeson.Value -> AesonTypes.Parser (CellState, Bool)
+            parseCell :: Aeson.Value -> AesonTypes.Parser CellState
             parseCell = Aeson.withObject "cell" $ \cell -> do
                 typeStr <- cell .: "type"
                 case typeStr :: String of
-                    "hidden" -> return (Hidden, False)
-                    "flagged" -> return (Flagged, False)
+                    "hidden" -> return Hidden
+                    "flagged" -> return Flagged
                     "revealed" -> do
                         count <- cell .: "adjacentMines"
-                        return (Revealed count, False)
-                    "mine" -> return (RevealedMine, True)
+                        return (Revealed count)
+                    "mine" -> return RevealedMine
                     _ -> fail "Unknown cell type"
 
-        -- Use KeyMap.toList and traverse the list within the Parser monad
+        -- Parse all cells
         parsedCells <- mapM
             (\(key, val) -> do
                 -- Parse position from key
                 pos <- case parsePos (Key.toString key) of
                            Just p -> return p
                            Nothing -> fail $ "Invalid position key: " ++ Key.toString key
-                -- Parse cell state and whether it's a mine
-                (state, isMine) <- parseCell val
-                return (pos, state, isMine)
+                -- Parse cell state
+                state <- parseCell val
+                return (pos, state)
             )
             (KeyMap.toList cellsObj)
 
-        -- Construct the final board map and mines list
-        let boardMap = Map.fromList [(pos, state) | (pos, state, _) <- parsedCells]
-            mineList = [pos | (pos, _, isMine) <- parsedCells, isMine]
-        return (boardMap, mineList)
+        -- Return the board map
+        return (Map.fromList parsedCells)

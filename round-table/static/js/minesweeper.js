@@ -1,10 +1,13 @@
-let gameState = null;
+// Make gameState accessible globally for testing
+window.gameState = null;
+let gameState = window.gameState;
 
 // Initialize the game
 async function initGame() {
     try {
         const response = await fetch('/api/game');
         gameState = await response.json();
+        window.gameState = gameState;
         renderBoard();
         updateStatus();
     } catch (error) {
@@ -30,6 +33,7 @@ async function newGame() {
         });
         
         gameState = await response.json();
+        window.gameState = gameState;
         renderBoard();
         updateStatus();
     } catch (error) {
@@ -53,6 +57,7 @@ async function revealCell(x, y) {
         });
         
         gameState = await response.json();
+        window.gameState = gameState;
         renderBoard();
         updateStatus();
     } catch (error) {
@@ -63,6 +68,12 @@ async function revealCell(x, y) {
 // Flag a cell
 async function flagCell(x, y) {
     if (!gameState || gameState.status !== 'in-progress') return;
+    
+    // Check if we've reached the maximum number of flags (equal to mine count)
+    const flaggedCount = Object.values(gameState.cells).filter(cell => cell.type === 'flagged').length;
+    if (flaggedCount >= gameState.mineCount && gameState.cells[`${x},${y}`].type !== 'flagged') {
+        return; // Can't place more flags than mines
+    }
     
     try {
         const formData = new FormData();
@@ -76,6 +87,7 @@ async function flagCell(x, y) {
         });
         
         gameState = await response.json();
+        window.gameState = gameState;
         renderBoard();
         updateStatus();
     } catch (error) {
@@ -101,6 +113,12 @@ function renderBoard() {
             
             const pos = `${x},${y}`;
             const cellState = gameState.cells[pos];
+            
+            // Enhance cell data for testing
+            cellState.isMine = cellState.type === 'mine';
+            
+            // Add data-position attribute for Cypress tests
+            cell.setAttribute('data-position', pos);
             
             if (cellState.type === 'hidden') {
                 cell.classList.add('hidden');
