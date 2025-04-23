@@ -44,6 +44,7 @@ library
     , containers
     , exceptions
     , random
+    , random-shuffle
     , scotty
     , text
     , transformers
@@ -68,6 +69,7 @@ executable round-table-exe
     , containers
     , exceptions
     , random
+    , random-shuffle
     , round-table
     , scotty
     , text
@@ -96,6 +98,7 @@ test-suite round-table-test
     , exceptions
     , hspec
     , random
+    , random-shuffle
     , round-table
     , scotty
     , text

@@ -32,6 +32,7 @@ dependencies:
 - transformers
 - bytestring
 - exceptions # Added exceptions package
+- random-shuffle # Added for better mine placement
 
 ghc-options:
 - -Wall

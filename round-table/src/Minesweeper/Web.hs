@@ -7,6 +7,7 @@ module Minesweeper.Web
   )
 where
 
+import qualified Control.Applicative as App -- Qualified import for alternative parsing
 import qualified Data.Aeson as Aeson
 import Data.Aeson ((.=), (.:)) -- Explicitly import operators and functions
 import qualified Data.Aeson.Key as Key -- Import Key module
@@ -111,7 +112,8 @@ gameToJson game = Aeson.object
     , "height" .= boardHeight game
     , "mineCount" .= length (mines game)
     , "status" .= gameStatusToJson (gameStatus game)
-    , "cells" .= Aeson.object (map cellToJson $ Map.toList $ board game)
+    , "revealedCount" .= revealedNonMineCount game  -- Add the new field
+    , "cells" .= Aeson.object (map cellToJson $ Map.toList $ gameBoard game)
     ]
   where
     cellToJson :: (Position, CellState) -> AesonTypes.Pair
@@ -137,6 +139,9 @@ jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do
     mineCount <- obj .: "mineCount"
     statusStr <- obj .: "status"
     cellsObj <- obj .: "cells"
+    
+    -- Optional: try to get the revealed count from JSON, or default to calculating it
+    revealedCount <- (obj .: "revealedCount") App.<|> return 0
 
     -- Create a new game state with a fixed seed (42)
     -- This ensures mines are consistent when state is sent back to server
@@ -146,9 +151,15 @@ jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do
     -- Now update the board with the cell states from JSON
     board' <- jsonToBoardMap cellsObj
     
+    -- Calculate the actual revealed count if not provided in JSON
+    let actualRevealedCount = if revealedCount > 0 
+                              then revealedCount 
+                              else countRevealed board'
+    
     return $ game
-        { board = board'
+        { gameBoard = board'
         , gameStatus = gameStatus'
+        , revealedNonMineCount = actualRevealedCount
         }
   where
     jsonToGameStatus :: String -> GameStatus
@@ -156,6 +167,13 @@ jsonToGame = AesonTypes.parseMaybe $ Aeson.withObject "GameState" $ \obj -> do
     jsonToGameStatus "won" = Won
     jsonToGameStatus "lost" = Lost
     jsonToGameStatus _ = InProgress
+    
+    -- Count revealed non-mine cells in the board
+    countRevealed :: Map.Map Position CellState -> Int
+    countRevealed brd = length $ filter isRevealed $ Map.elems brd
+      where
+        isRevealed (Revealed _) = True
+        isRevealed _ = False
 
     -- Function to parse just the board map from the cells object
     jsonToBoardMap :: Aeson.Value -> AesonTypes.Parser (Map.Map Position CellState)

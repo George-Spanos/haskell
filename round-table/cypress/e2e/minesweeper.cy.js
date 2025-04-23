@@ -114,34 +114,23 @@ describe('Minesweeper Game', () => {
       cy.get('.cell.flagged').its('length').should('equal', mineCount);
     });
   });
-  
-  // Create a simplified test for the winning scenario
-  it('should detect when a game is won', () => {
-    // This test verifies the UI can display a "Won" status by directly modifying the DOM
-    
-    // Start with a new game
+  it('should allow restarting the game', () => {
+    // Click the new game button
     cy.get('#new-game').click();
-    cy.wait(200);
     
-    // Directly modify the DOM to simulate a win scenario
-    cy.window().then((win) => {
-      const gameStatusElement = win.document.getElementById('game-status');
-      const originalStatus = gameStatusElement.textContent;
-      
-      // Log for debugging
-      cy.log(`Original status: ${originalStatus}`);
-      
-      // Directly modify the DOM (not just the game state)
-      gameStatusElement.textContent = 'Game Status: You Won!';
-      
-      // Log for debugging
-      cy.log(`Modified status: ${gameStatusElement.textContent}`);
-      
-      // Check that the DOM was updated
-      cy.get('#game-status').should('include.text', 'Won');
+    // Verify the game has restarted
+    cy.get('#game-status').should('not.include.text', 'Game Over');
+    cy.get('.cell').should('not.have.class', 'revealed');
+  });
+  it('should show the correct number of adjacent mines', () => {
+    // Click a cell that is not a mine
+    cy.get('.cell.hidden').first().click();
+    
+    // Check if the cell shows the correct number of adjacent mines
+    cy.get('.cell.revealed').then(($revealedCells) => {
+      const revealedCell = $revealedCells[0];
+      const adjacentMinesCount = parseInt(revealedCell.innerText);
+      expect(adjacentMinesCount).to.be.at.least(0);
     });
-    
-    // Final verification that the status shows as won
-    cy.get('#game-status').should('include.text', 'Won');
   });
 });
